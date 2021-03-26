@@ -1,22 +1,39 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Задача 20</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Задача 20</title> 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/styles.css">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik&display=swap" rel="stylesheet">
+  <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <script src="../static/script.js" type="text/javascript"></script>
 </head>
 <body>
-  <div class='homepage'>
-    <div class='jumbotron text-center'>
-      <h1>Объекты культурного наследия, находящиеся в неудовлетворительном состоянии </h1>
+    <div class="jumbotron jumbotron-fluid">
+        <div class='row justify-content-center'>
+            <div class="col-12 col-md-6 text-center">
+                <img src='https://audithon.ru/svg/header/logo-full.svg'>
+            </div>
+            <div class="col-12 col-md-6 text-center">
+                <h1>AUDITHION</h1>
+            </div>
+        </div>
+        <div class="container text-center">
+            <h4>ЗАДАЧА 20</h4>
+            <p>Объекты культурного наследия, находящиеся в неудовлетворительном состоянии</p>
+        </div>
     </div>
-    <div class='container'>
-      <div class='row row-flex row-flex-wrap' id='dynamic'></div>
-    </div>
-  </div>
-  <script src="../static/script.js"></script>
+   <div class='container mapcontainer'>
+        <div id="map"></div>
+   </div>
+        
+   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </body>
 </html>
