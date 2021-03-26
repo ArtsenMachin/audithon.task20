@@ -13,6 +13,7 @@
   <script src="../static/script.js" type="text/javascript"></script>
 </head>
 <body>
+<div class='homepage'> 
     <div class="jumbotron jumbotron-fluid">
         <div class='row justify-content-center'>
             <div class="col-12 col-md-6 text-center">
@@ -27,12 +28,12 @@
             <p>Объекты культурного наследия, находящиеся в неудовлетворительном состоянии</p>
         </div>
     </div>
-    <div class='row mapcontainer'>
-        <div class='col-0 col-md-2'></div>
-        <div class='col-12 col-md-8'>
+    <div class='row pl-md-2 pr-md-2' id='mapcontainer'>
+        <div class='col-0 col-xl-1 d-none d-xl-block'></div>
+        <div class='col-12 col-md-9 col-lg-9'>
             <div id="map"></div>
         </div>
-        <div class='col-12 col-md-2 align-self-center'>
+        <div class='col-12 col-md-3 col-xl-2 align-self-center'>
             <div class='row'>
                 <div class='col-12 mb-2'>
                     <div><img src='https://yastatic.net/s3/locdoc/freeze/maps/freeze/dn43KupGJUJbbnGX-uhobz3k_Ks.png'>-федеральное значение</div>
@@ -43,17 +44,42 @@
                 <div class='col-12 mt-2 mb-2'>
                     <div><img src='https://yastatic.net/s3/locdoc/freeze/maps/freeze/jpm2i_vveDjjyaa_CCY3mw-B5fg.png'>-муниципальное значение</div>
                 </div>
-                <div class='col-12 mt-2'>
+                <div class='col-12 mt-2 mb-4'>
                     <div><img src='https://yastatic.net/s3/locdoc/freeze/maps/freeze/3zEkHnopIaLnJ6B3zWoZ4IDD080.png'>-выявленные</div>
+                </div>
+                <div class='col-12 mt-2'>
+                    <div class='helpcard pl-2 pt-4 pb-5'>
+                        <div class='row text-center'>
+                            <div class='col-12'>
+                                <h4>Не нашли то, что искали?</h4>
+                            </div>
+                            <div class='col-12 pt-4'>
+                                <p>Помогите нам спасти памятники культуры! Заполните форму!</p>
+                            </div>
+                            <div class='col-12 pt-5'>
+                                <button class="btnF" onclick='toForm()'>К форме</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-   
-        
-   
+   <div class='container mt-3 text-center'>
+    <buttton class='btn align-items-center' onclick='ShowDiagrams()'>
+        <img src="https://cdn.discordapp.com/attachments/783709006258503691/824990354503630858/add-plus-button.png" width="30px" class='item' id='buttonImage'>
+    </buttton>
+   </div>
+    <div class='container-fluid' id='diagrams'>
+
+    </div>
+</div>      
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 </body>
 </html>
