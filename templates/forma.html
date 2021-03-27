@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="//api-maps.yandex.ru">
+  <link rel="dns-prefetch" href="//api-maps.yandex.ru">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Задача 20</title> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/forma.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik&display=swap" rel="stylesheet">
+  <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <script src="../static/forma.js" type="text/javascript"></script>
+</head>
+<body>
+<div class='homepage'> 
+    <div class='row'>
+        <div class='col-12 col-lg-2 leftMenu text-center'>
+            <button class='btn circleBtn mt-5' onclick="toIndex()">
+                <img src='https://cdn.discordapp.com/attachments/824553156905533491/825337879123066941/baseline_west_black_24dp.png' class='backImg'/>
+            </button>
+        </div>
+        <div class='col-12 col-lg-10 formContent'>
+          <div class='row mt-5 ml-4 mr-4'>
+              <div class='col-12 mt-2 ml-2 mb-5 Border'>
+                  <span class='formHead'><h1>Оставьте нам заявку</h1></span>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                 <span class='InputHead mb-2'>Название объекта</span>
+                 <input class='form-control inputs mt-2' type='text' placeholder='' id='name_input'>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                <span class='InputHead mb-2'>Тип объекта&nbsp;<a href="#" data-toggle="tooltip" data-placement="right" class="d-inline-block" tabindex="0"
+                    title="Памятник истории, Памятник религии, Памятник археологии, Памятник градостроительства и архитектуры, Памятник искусства">?</a></span>
+                <input class='form-control inputs mt-2' type='text' placeholder='' id='type_input'>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                <span class='InputHead mb-2'>Значение объекта</span>
+                <select class='form-control selects mt-2' id='important_input'>
+                    <option value='federal'>Федеральное</option>
+                    <option value='regional'>Региональное</option>
+                    <option value='municipalnie'>Муниципальное</option>
+                    <option value='viyvlenie'>Выявленные</option>
+                </select>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                <span class='InputHead mb-2'>Адрес</span>
+                <input class='form-control inputs mt-2' type='text' placeholder='' id='adress_input'>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                <span class='InputHead mb-2'>Координаты объекта</span>
+                <div class='row'>
+                    <div class='col-6'><input class='form-control inputs mt-2' type='number' placeholder='X' id='coordinatex_input'></div>
+                    <div class='col-6'><input class='form-control inputs mt-2' type='number' placeholder='Y' id='coordinatey_input'></div>
+                </div>
+              </div>
+              <div class='col-12 col-lg-6 mt-5'>
+                <span class='InputHead mb-2'>Фотография объекта</span>
+                <div class="input__wrapper">
+                    <input type="file" class="form-control-file mt-2 input__file" accept="image" id='image_input'>
+                    <label for="image_input" class="input__file-button text-center">
+                       <span class="input__file-button-text">Выберите файл</span>
+                    </label>
+                 </div>
+                
+              </div>
+              <div class='col-12 mt-5 mb-5'>
+                <span class='InputHead mb-2'>Комментарий</span>
+                <textarea class='form-control inputs mt-2' type='text' placeholder='' id='comment_input'></textarea>
+              </div>
+              <div class='col-12 mt-4 text-right'>
+                <button class='btn BtnServer mt-5' onclick="toServer()">Отправить</button>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>      
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</body>
+</html>
