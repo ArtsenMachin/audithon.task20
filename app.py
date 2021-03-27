@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
-from models.models import map_baloon_data
+from models.models import map_baloon_data, regions_get, diagrams
 import os
 import json
 
@@ -26,9 +26,23 @@ def page_not_found(e):
 
 @app.route('/get_baloons', methods = ['GET'])
 def baloons():
-    page = request.args['page']
-    return map_baloon_data(page)
+    return map_baloon_data()
+
+
+@app.route('/select_diagrams', methods = ['GET'])
+def regions_for_dias():
+    return regions_get()
+
+
+@app.route('/diagrams', methods = ['GET'])
+def diagrams_info():
+    regions = request.args['regions']
+    cult_value = request.args['cult_value']
+    state = request.args['state']
+    return diagrams("[     { category: 'Place #1',  first: 40,second: 55,  third: 60,  fourth: 40  },  {    category: 'Place #2',  first: 30, second: 78,"
+              "  third: 69, fourth: 40 }   ]")
 
 
 if __name__ == "__main__":
     app.run(debug=True, host="26.173.145.160", port='5000')
+
