@@ -24,25 +24,36 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/get_baloons', methods = ['GET'])
+@app.route('/get_baloons', methods=['GET'])
 def baloons():
     return map_baloon_data()
 
 
-@app.route('/select_diagrams', methods = ['GET'])
+@app.route('/select_diagrams', methods=['GET'])
 def regions_for_dias():
     return regions_get()
 
 
-@app.route('/diagrams', methods = ['GET'])
+@app.route('/diagrams', methods=['GET'])
 def diagrams_info():
     regions = request.args['regions']
     cult_value = request.args['cult_value']
     state = request.args['state']
-    return diagrams("[     { category: 'Place #1',  first: 40,second: 55,  third: 60,  fourth: 40  },  {    category: 'Place #2',  first: 30, second: 78,"
-              "  third: 69, fourth: 40 }   ]")
+    return diagrams(regions, cult_value, state)
+
+
+# @app.route('/diagrams2', methods=['GET'])
+# def diagrams_info2():
+#     regions = request.args['regions']
+#     cult_value = request.args['cult_value']
+#     state = request.args['state']
+#     return diagrams(regions, cult_value, state)
+
+
+@app.route('/form', methods=['GET'])
+def redirect():
+    return render_template("form.html")
 
 
 if __name__ == "__main__":
     app.run(debug=True, host="26.173.145.160", port='5000')
-

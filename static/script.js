@@ -179,14 +179,16 @@ function ShowDiagrams(){
                         </div>
                     </div>`;
         document.getElementById('diagrams').innerHTML=html_str;
-        drawAll();
+        //drawAll();
         $.ajax({
             url: "/select_diagrams"
         }).done(function (data) {
             select_data=JSON.parse(data);
+            console.log(data);
+            console.log(select_data);
             html_str='';
-            for(let i=0; select_data[0].lenght; i++){
-                $('#region_select').append("<option value="+select_data[0][i]+">"+select_data[1][i]+"</option>");
+            for(let i=0; i<select_data.length; i++){
+                $('#region_select').append("<option value="+select_data[i][0]+">"+select_data[i][1]+"</option>");
             }
             drawDiagrams();
         });
@@ -366,10 +368,17 @@ function drawAll(data){
         }
         
     });
-    
+
+    var n = document.getElementById('region_select').options.selectedIndex;    
+    region_temp = document.getElementById('region_select').options[n].value;
+    n = document.getElementById('important_select').options.selectedIndex;    
+    important_temp = document.getElementById('important_select').options[n].value;
+    n = document.getElementById('state_select').options.selectedIndex;    
+    state_temp = document.getElementById('state_select').options[n].value;
+
     $.ajax({
         url: "/diagrams2",
-        data:{region_temp,important_temp,state_temp}
+        data:{regions: region_temp,cult_value: important_temp,state:state_temp}
     }).done(function (data) {
         drawAllSecond(data);
     });
@@ -987,8 +996,8 @@ function drawRegImpSt(data){
     document.getElementById('chartdiv').innerHTML=html_str;          
 }
 
-function toForm(){
-    $.ajax({
-        url: "/to_form"
-    })
-}
+// function toForm(){
+//     $.ajax({
+//         url: "/to_form"
+//     })
+// }
