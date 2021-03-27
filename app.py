@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
-from models.models import test
+from models.models import map_baloon_data
 import os
 import json
 
@@ -24,10 +24,11 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/test', methods = ['GET'])
-def test1():
-    return test()
+@app.route('/get_baloons', methods = ['GET'])
+def baloons():
+    page = request.args['page']
+    return map_baloon_data(page)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="26.173.145.160", port='5000')
