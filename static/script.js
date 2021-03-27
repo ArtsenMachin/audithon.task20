@@ -134,7 +134,7 @@ function init() {
     }
 
    $.ajax({
-        url: "/test"
+        url: "/get_baloons"
     }).done(function (data) {
         objectManager.add(data);
     });
@@ -174,7 +174,7 @@ function ShowDiagrams(){
                             </select>
                         </div>
                         <div class='col-6 col-lg-3'>
-                        <button class="btnF" onclick='drawDiagrams()'>Применить фильтры</button>
+                        <button class="btnF btnFiltr" onclick='drawDiagrams()'>Применить фильтры</button>
                         </div>
                         <div class='col-12'>
                             <div id="chartdiv"></div>
@@ -985,4 +985,10 @@ function drawRegImpSt(data){
                 </div>
               </div>`;
     document.getElementById('chartdiv').innerHTML=html_str;          
+}
+
+function toForm(){
+    $.ajax({
+        url: "/to_form"
+    })
 }

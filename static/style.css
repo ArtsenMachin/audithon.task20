@@ -89,3 +89,6 @@
     position: relative;
     top: 0.1875px;
 }
+.btnFiltr:hover{
+    color:midnightblue;
+}
