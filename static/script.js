@@ -1,3 +1,9 @@
+window.onload = function() {
+    let availableScreenHeight = document.documentElement.scrollHeight;
+    availableScreenHeight=availableScreenHeight*0.6;
+    document.getElementById('mapcontainer').style.height=''+availableScreenHeight+'px';
+}
+
 ymaps.ready(init);
 
 function init() {
@@ -14,16 +20,15 @@ function init() {
             searchControlProvider: 'yandex#search'
         }),
         objectManager = new ymaps.ObjectManager({
-            // Чтобы метки начали кластеризоваться, выставляем опцию.
+            
             clusterize: true,
-            // ObjectManager принимает те же опции, что и кластеризатор.
+          
             gridSize: 64,
-            // Макет метки кластера pieChart.
+            
             clusterIconLayout: "default#pieChart"
         });
     myMap.geoObjects.add(objectManager);
 
-    // Создадим 5 пунктов выпадающего списка.
     var listBoxItems1 = ['федеральное', 'муниципальное', 'региональное', 'выявленный']
             .map(function (title) {
                 return new ymaps.control.ListBoxItem({
@@ -39,7 +44,7 @@ function init() {
             filters[filter.data.get('content')] = filter.isSelected();
             return filters;
         },
-        // Теперь создадим список, содержащий 5 пунктов.
+      
         listBoxControl1 = new ymaps.control.ListBox({
             data: {
                 content: 'Значение',
@@ -47,14 +52,14 @@ function init() {
             },
             items: listBoxItems1,
             state: {
-                // Признак, развернут ли список.
+              
                 expanded: false,
                 filters: listBoxItems1.reduce(reducer1, {})
             }
         });
     myMap.controls.add(listBoxControl1);
 
-    // Добавим отслеживание изменения признака, выбран ли пункт списка.
+ 
     listBoxControl1.events.add(['select', 'deselect'], function (e) {
         var listBoxItem = e.get('target');
         var filters = ymaps.util.extend({}, listBoxControl1.state.get('filters'));
@@ -64,7 +69,7 @@ function init() {
 
     var filterMonitor = new ymaps.Monitor(listBoxControl1.state);
     filterMonitor.add('filters', function (filters) {
-        // Применим фильтр.
+      
         objectManager.setFilter(getFilterFunction1(filters));
     });
 
@@ -76,7 +81,6 @@ function init() {
         }
     }
 
-////////////////////////////////////////////////////////
     var listBoxItems = ['Удовлетворительное','Неудовлетворительное', 'Утраченный']
             .map(function (title) {
                 return new ymaps.control.ListBoxItem({
@@ -92,7 +96,7 @@ function init() {
             filters[filter.data.get('content')] = filter.isSelected();
             return filters;
         },
-        // Теперь создадим список, содержащий 5 пунктов.
+        
         listBoxControl = new ymaps.control.ListBox({
             data: {
                 content: 'Состояние',
@@ -100,14 +104,14 @@ function init() {
             },
             items: listBoxItems,
             state: {
-                // Признак, развернут ли список.
+                
                 expanded: false,
                 filters: listBoxItems.reduce(reducer, {})
             }
         });
     myMap.controls.add(listBoxControl);
 
-    // Добавим отслеживание изменения признака, выбран ли пункт списка.
+
     listBoxControl.events.add(['select', 'deselect'], function (e) {
         var listBoxItem = e.get('target');
         var filters = ymaps.util.extend({}, listBoxControl.state.get('filters'));
@@ -117,7 +121,7 @@ function init() {
 
     var filterMonitor = new ymaps.Monitor(listBoxControl.state);
     filterMonitor.add('filters', function (filters) {
-        // Применим фильтр.
+      
         objectManager.setFilter(getFilterFunction(filters));
     });
 
@@ -135,4 +139,850 @@ function init() {
         objectManager.add(data);
     });
 
+}
+
+function ShowDiagrams(){
+    console.log(document.getElementById('buttonImage').src);
+    if(document.getElementById('buttonImage').src=="https://cdn.discordapp.com/attachments/783709006258503691/824990354503630858/add-plus-button.png"){
+        document.getElementById('buttonImage').src="https://cdn.discordapp.com/attachments/783709006258503691/824990351797256222/clear-button.png";
+        document.getElementById('diagrams').style.display='block';
+        html_str='';
+        html_str=   `<div class='row' id='diagramsContent'>
+                        <div class='col-6 col-lg-3'>
+                            <span>Регионы</span>
+                            <select class='form-control' id='region_select'>
+                                <option value='all'>все</option>
+                            </select>
+                        </div>
+                        <div class='col-6 col-lg-3'>
+                            <span>Значениe ОКН</span>
+                            <select class='form-control' id='important_select'>
+                                <option value='all'>все</option>
+                                <option value='federal'>Федеральное</option>
+                                <option value='regional'>Региональное</option>
+                                <option value='municipalnie'>Муниципальное</option>
+                                <option value='viyvlenie'>Выявленные</option>
+                            </select>
+                        </div>
+                        <div class='col-6 col-lg-3'>
+                            <span>Cостояние ОКН</span>
+                            <select class='form-control' id='state_select'>
+                                <option value='all'>все</option>
+                                <option value='ud'>удовлетворительное</option>
+                                <option value='neud'>неудовлетворительное</option>
+                                <option value='utr'>утраченные</option>
+                            </select>
+                        </div>
+                        <div class='col-6 col-lg-3'>
+                        <button class="btnF" onclick='drawDiagrams()'>Применить фильтры</button>
+                        </div>
+                        <div class='col-12'>
+                            <div id="chartdiv"></div>
+                        </div>
+                    </div>`;
+        document.getElementById('diagrams').innerHTML=html_str;
+        drawAll();
+        $.ajax({
+            url: "/select_diagrams"
+        }).done(function (data) {
+            select_data=JSON.parse(data);
+            html_str='';
+            for(let i=0; select_data[0].lenght; i++){
+                $('#region_select').append("<option value="+select_data[0][i]+">"+select_data[1][i]+"</option>");
+            }
+            drawDiagrams();
+        });
+    }else{
+        document.getElementById('buttonImage').src="https://cdn.discordapp.com/attachments/783709006258503691/824990354503630858/add-plus-button.png";
+        document.getElementById('diagrams').innerHTML='';
+        document.getElementById('diagrams').style.display='none';
+    }
+}
+
+function drawDiagrams(){
+    var n = document.getElementById('region_select').options.selectedIndex;    
+    region_temp = document.getElementById('region_select').options[n].value;
+    n = document.getElementById('important_select').options.selectedIndex;    
+    important_temp = document.getElementById('important_select').options[n].value;
+    n = document.getElementById('state_select').options.selectedIndex;    
+    state_temp = document.getElementById('state_select').options[n].value;
+    $.ajax({
+        url: "/diagrams",
+        data:{region_temp,important_temp,state_temp}
+    }).done(function (data) {
+
+        if(region_temp=='all'&&important_temp=='all'&&state_temp=='all'){ /**все регионы, все значения, все состояния */
+            drawAll(data);
+        }else{
+            if(region_temp!='all'&&important_temp=='all'&&state_temp=='all'){ /**1 регион, все значения, все состояния */
+                drawReg(data);
+            }else{
+                if(region_temp!='all'&&important_temp!='all'&&state_temp=='all'){ /**1 регион, 1 значение, все состояния */
+                    drawRegImp(data);
+                }else{
+                    if(region_temp!='all'&&important_temp=='all'&&state_temp!='all'){ /**1 регион, все значения, 1 состояние */
+                        drawRegSt(data);
+                    }else{
+                        if(region_temp=='all'&&important_temp!='all'&&state_temp=='all'){ /**все регионы, 1 значение, все состояния */
+                            drawImp(data);
+                        }else{
+                            if(region_temp=='all'&&important_temp!='all'&&state_temp!='all'){ /**все регионы, 1 значение, 1 состояние */
+                                drawImpSt(data);
+                            }else{
+                                if(region_temp=='all'&&important_temp=='all'&&state_temp!='all'){ /**все регионы, все значение, 1 состояние */
+                                    drawSt(data);
+                                }else{                                                              /**1 регион, 1 значение, 1 состояние */
+                                    drawRegImpSt(data);
+                                } 
+                            }
+                        }  
+                    }
+                }
+            }
+        }
+    });
+}
+/**все регионы, все значения, все состояния */
+function drawAll(data){
+
+    am4core.ready(function() {
+
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+                
+        var chart = am4core.create('chartdiv', am4charts.XYChart)
+        chart.colors.step = 2;
+        
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+        
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+        
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+        
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+        
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.text = '{valueY}'
+            bullet.label.fill = am4core.color('#ffffff')
+        
+            return series;
+        }
+        
+        chart.data = data;
+        /*[
+            {
+                category: 'Place #1',
+                first: 40,
+                second: 55,
+                third: 60,
+                fourth: 40
+            },
+            {
+                category: 'Place #2',
+                first: 30,
+                second: 78,
+                third: 69,
+                fourth: 40
+            },
+            {
+                category: 'Place #3',
+                first: 27,
+                second: 40,
+                third: 45,
+                fourth: 40
+            },
+            {
+                category: 'Place #4',
+                first: 50,
+                second: 33,
+                third: 22,
+                fourth: 40
+            }
+        ]*/
+        
+        
+        createSeries('first', 'Федеральное значение');
+        createSeries('second', 'Региональное значение');
+        createSeries('third', 'Муниципальное значение');
+        createSeries('fourth', 'Выявленные');
+        
+        function arrangeColumns() {
+        
+            var series = chart.series.getIndex(0);
+        
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+        
+                    var newIndex = 0;
+                    chart.series.each(function(series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+        
+                    chart.series.each(function(series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+        
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+        
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+        
+    });
+    
+    $.ajax({
+        url: "/diagrams2",
+        data:{region_temp,important_temp,state_temp}
+    }).done(function (data) {
+        drawAllSecond(data);
+    });
+}
+    function drawAllSecond(data){
+
+        var div = document.createElement("div");
+        div.setAttribute("class", "col-12");
+        div.innerHTML='<div id="chartdiv1"></div>';
+        document.getElementById('diagramsContent').appendChild(div);
+        am4core.ready(function() {
+
+            document.getElementById('chartdiv1').innerHTML='';
+            // Themes begin
+            am4core.useTheme(am4themes_material);
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+                    
+            var chart1 = am4core.create('chartdiv1', am4charts.XYChart)
+            chart1.colors.step = 2;
+            
+            chart1.legend = new am4charts.Legend()
+            chart1.legend.position = 'top'
+            chart1.legend.paddingBottom = 20
+            chart1.legend.labels.template.maxWidth = 95
+            
+            var xAxis = chart1.xAxes.push(new am4charts.CategoryAxis())
+            xAxis.dataFields.category = 'category'
+            xAxis.renderer.cellStartLocation = 0.1
+            xAxis.renderer.cellEndLocation = 0.9
+            xAxis.renderer.grid.template.location = 0;
+            
+            var yAxis = chart1.yAxes.push(new am4charts.ValueAxis());
+            yAxis.min = 0;
+            
+            function createSeries(value, name) {
+                var series = chart1.series.push(new am4charts.ColumnSeries())
+                series.dataFields.valueY = value
+                series.dataFields.categoryX = 'category'
+                series.name = name
+            
+                series.events.on("hidden", arrangeColumns);
+                series.events.on("shown", arrangeColumns);
+            
+                var bullet = series.bullets.push(new am4charts.LabelBullet())
+                bullet.interactionsEnabled = false
+                bullet.dy = 30;
+                bullet.label.text = '{valueY}'
+                bullet.label.fill = am4core.color('#ffffff')
+            
+                return series;
+            }
+            
+            chart1.data = data;
+        
+            
+            createSeries('first', 'Удовлетворительное состояние');
+            createSeries('second', 'Неуловлетворительное состояние');
+            createSeries('third', 'Утраченные');
+            
+            function arrangeColumns() {
+            
+                var series = chart1.series.getIndex(0);
+            
+                var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+                if (series.dataItems.length > 1) {
+                    var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                    var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                    var delta = ((x1 - x0) / chart1.series.length) * w;
+                    if (am4core.isNumber(delta)) {
+                        var middle = chart1.series.length / 2;
+            
+                        var newIndex = 0;
+                        chart1.series.each(function(series) {
+                            if (!series.isHidden && !series.isHiding) {
+                                series.dummyData = newIndex;
+                                newIndex++;
+                            }
+                            else {
+                                series.dummyData = chart1.series.indexOf(series);
+                            }
+                        })
+                        var visibleCount = newIndex;
+                        var newMiddle = visibleCount / 2;
+            
+                        chart1.series.each(function(series) {
+                            var trueIndex = chart1.series.indexOf(series);
+                            var newIndex = series.dummyData;
+            
+                            var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+            
+                            series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                            series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        })
+                    }
+                }
+            }
+            
+        });
+
+    }
+
+/**1 регион, все значения, все состояния */
+function drawReg(data){
+
+    document.getElementById('chartdiv1').innerHTML='';
+    am4core.ready(function() {
+
+        document.getElementById('chartdiv').innerHTML='';
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+                
+        var chart = am4core.create('chartdiv', am4charts.XYChart)
+        chart.colors.step = 2;
+        
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+        
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+        
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+        
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+        
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.text = '{valueY}'
+            bullet.label.fill = am4core.color('#ffffff')
+        
+            return series;
+        }
+        
+        chart.data = data;
+       
+        createSeries('first', 'Удовлетворительное состояние');
+        createSeries('second', 'Неуловлетворительное состояние');
+        createSeries('third', 'Утраченные');
+        
+        function arrangeColumns() {
+        
+            var series = chart.series.getIndex(0);
+        
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+        
+                    var newIndex = 0;
+                    chart.series.each(function(series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+        
+                    chart.series.each(function(series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+        
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+        
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+        
+    });
+}
+/**1 регион, 1 значение, все состояния */
+function drawRegImp(data){
+    document.getElementById('chartdiv1').innerHTML='';
+    am4core.ready(function() {
+        document.getElementById('chartdiv').innerHTML='';
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.PieChart);
+        
+        // Add data
+        chart.data = data;
+        /*[ {
+          "state": "Lithuania",
+          "value": 501.9
+        }, {
+          "state": "Czechia",
+          "value": 301.9
+        }, {
+          "state": "Ireland",
+          "value": 201.1
+        }, {
+          "state": "Germany",
+          "value": 165.8
+        }, {
+          "state": "Australia",
+          "value": 139.9
+        }, {
+          "state": "Austria",
+          "value": 128.3
+        }, {
+          "state": "UK",
+          "value": 99
+        }
+        ];*/
+        
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "value";
+        pieSeries.dataFields.category = "state";
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeOpacity = 1;
+        
+        // This creates initial animation
+        pieSeries.hiddenState.properties.opacity = 1;
+        pieSeries.hiddenState.properties.endAngle = -90;
+        pieSeries.hiddenState.properties.startAngle = -90;
+        
+        chart.hiddenState.properties.radius = am4core.percent(0);
+        
+        
+        });
+
+}
+/**1 регион, все значения, 1 состояние */
+function drawRegSt(data){
+    document.getElementById('chartdiv1').innerHTML='';
+    am4core.ready(function() {
+        document.getElementById('chartdiv').innerHTML='';
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.PieChart);
+        
+        // Add data
+        chart.data = data;
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "value";
+        pieSeries.dataFields.category = "importance";
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeOpacity = 1;
+        
+        // This creates initial animation
+        pieSeries.hiddenState.properties.opacity = 1;
+        pieSeries.hiddenState.properties.endAngle = -90;
+        pieSeries.hiddenState.properties.startAngle = -90;
+        
+        chart.hiddenState.properties.radius = am4core.percent(0);
+        
+        });
+}
+/**все регионы, 1 значение, все состояния */
+function drawImp(data){
+    am4core.ready(function() {
+
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+                
+        var chart = am4core.create('chartdiv', am4charts.XYChart)
+        chart.colors.step = 2;
+        
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+        
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+        
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+        
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+        
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.text = '{valueY}'
+            bullet.label.fill = am4core.color('#ffffff')
+        
+            return series;
+        }
+        
+        chart.data = data;
+        
+        createSeries('first', 'Удовлетворительное состояние');
+        createSeries('second', 'Неуловлетворительное состояние');
+        createSeries('third', 'Утраченные');
+        
+        function arrangeColumns() {
+        
+            var series = chart.series.getIndex(0);
+        
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+        
+                    var newIndex = 0;
+                    chart.series.each(function(series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+        
+                    chart.series.each(function(series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+        
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+        
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+        
+    });
+
+}
+/**все регионы, 1 значение, 1 состояние */
+function drawImpSt(data){
+
+    am4core.ready(function() {
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.XYChart);
+        chart.scrollbarX = new am4core.Scrollbar();
+        
+        // Add data
+        chart.data = data;
+        /*[{
+          "country": "USA",
+          "visits": 3025
+        }, {
+          "country": "China",
+          "visits": 1882
+        }, {
+          "country": "Japan",
+          "visits": 1809
+        }, {
+          "country": "Germany",
+          "visits": 1322
+        }, {
+          "country": "UK",
+          "visits": 1122
+        }, {
+          "country": "France",
+          "visits": 1114
+        }, {
+          "country": "India",
+          "visits": 984
+        }, {
+          "country": "Spain",
+          "visits": 711
+        }, {
+          "country": "Netherlands",
+          "visits": 665
+        }, {
+          "country": "Russia",
+          "visits": 580
+        }, {
+          "country": "South Korea",
+          "visits": 443
+        }, {
+          "country": "Canada",
+          "visits": 441
+        }];*/
+        
+        // Create axes
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "country";
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.renderer.minGridDistance = 30;
+        categoryAxis.renderer.labels.template.horizontalCenter = "right";
+        categoryAxis.renderer.labels.template.verticalCenter = "middle";
+        categoryAxis.renderer.labels.template.rotation = 270;
+        categoryAxis.tooltip.disabled = true;
+        categoryAxis.renderer.minHeight = 110;
+        
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.minWidth = 50;
+        
+        // Create series
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.sequencedInterpolation = true;
+        series.dataFields.valueY = "value";
+        series.dataFields.categoryX = "country";
+        series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+        series.columns.template.strokeWidth = 0;
+        
+        series.tooltip.pointerOrientation = "vertical";
+        
+        series.columns.template.column.cornerRadiusTopLeft = 10;
+        series.columns.template.column.cornerRadiusTopRight = 10;
+        series.columns.template.column.fillOpacity = 0.8;
+        
+        // on hover, make corner radiuses bigger
+        var hoverState = series.columns.template.column.states.create("hover");
+        hoverState.properties.cornerRadiusTopLeft = 0;
+        hoverState.properties.cornerRadiusTopRight = 0;
+        hoverState.properties.fillOpacity = 1;
+        
+        series.columns.template.adapter.add("fill", function(fill, target) {
+          return chart.colors.getIndex(target.dataItem.index);
+        });
+        
+        // Cursor
+        chart.cursor = new am4charts.XYCursor();
+        
+        });
+
+}
+/**все регионы, все значение, 1 состояние */
+function drawSt(data){
+
+    am4core.ready(function() {
+
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+                
+        var chart = am4core.create('chartdiv', am4charts.XYChart)
+        chart.colors.step = 2;
+        
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+        
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+        
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+        
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+        
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.text = '{valueY}'
+            bullet.label.fill = am4core.color('#ffffff')
+        
+            return series;
+        }
+        
+        chart.data = data;
+        /*[
+            {
+                category: 'Place #1',
+                first: 40,
+                second: 55,
+                third: 60,
+                fourth: 40
+            },
+            {
+                category: 'Place #2',
+                first: 30,
+                second: 78,
+                third: 69,
+                fourth: 40
+            },
+            {
+                category: 'Place #3',
+                first: 27,
+                second: 40,
+                third: 45,
+                fourth: 40
+            },
+            {
+                category: 'Place #4',
+                first: 50,
+                second: 33,
+                third: 22,
+                fourth: 40
+            }
+        ]*/
+        
+        
+        createSeries('first', 'Федеральное значение');
+        createSeries('second', 'Региональное значение');
+        createSeries('third', 'Муниципальное значение');
+        createSeries('fourth', 'Выявленные');
+        
+        function arrangeColumns() {
+        
+            var series = chart.series.getIndex(0);
+        
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+        
+                    var newIndex = 0;
+                    chart.series.each(function(series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+        
+                    chart.series.each(function(series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+        
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+        
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+        
+    });
+
+}
+/**1 регион, 1 значение, 1 состояние */
+function drawRegImpSt(data){
+    document.getElementById('chartdiv').innerHTML='';
+    document.getElementById('chartdiv1').innerHTML='';
+    html_str='';
+    html_str=`<div class='row text-center> 
+                <div class='col-12 text-center mt-4'>
+                <p>Всего ОКН по заданным фильтрам: <h2 id='bigNumber>`+data+`</h2></p>
+                </div>
+              </div>`;
+    document.getElementById('chartdiv').innerHTML=html_str;          
 }
