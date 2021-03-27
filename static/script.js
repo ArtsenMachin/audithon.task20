@@ -81,7 +81,7 @@ function init() {
         }
     }
 
-    var listBoxItems = ['Удовлетворительное','Неудовлетворительное', 'Утраченный']
+    var listBoxItems = ['Удовлетворительное','Неудовлетворительное', 'Утраченный', 'N/A']
             .map(function (title) {
                 return new ymaps.control.ListBoxItem({
                     data: {
@@ -132,13 +132,11 @@ function init() {
             return categories[content[1]]
         }
     }
-
    $.ajax({
-        url: "/test"
+        url: "/get_baloons"
     }).done(function (data) {
         objectManager.add(data);
     });
-
 }
 
 function ShowDiagrams(){
@@ -208,7 +206,7 @@ function drawDiagrams(){
     state_temp = document.getElementById('state_select').options[n].value;
     $.ajax({
         url: "/diagrams",
-        data:{region_temp,important_temp,state_temp}
+        data:{regions: region_temp,cult_value: important_temp,state:state_temp}
     }).done(function (data) {
 
         if(region_temp=='all'&&important_temp=='all'&&state_temp=='all'){ /**все регионы, все значения, все состояния */
@@ -246,9 +244,11 @@ function drawDiagrams(){
 function drawAll(data){
 
     am4core.ready(function() {
-
+        
+        try{
         document.getElementById('chartdiv').innerHTML='';
-        document.getElementById('chartdiv1').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';}
+        catch{console.log('eroor blin');}
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
