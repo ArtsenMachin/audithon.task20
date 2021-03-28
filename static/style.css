@@ -96,3 +96,7 @@
 .btnFiltr:hover{
     color:midnightblue;
 }
+.carousel-indicators {
+    background-color: #3F51B5;
+    margin-top: 20px;
+}
