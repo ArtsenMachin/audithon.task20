@@ -1259,9 +1259,9 @@ function drawRegImpSt(data){
         document.getElementById('chartdivS').innerHTML='';}
     catch{}
     html_str='';
-    html_str=`<div class='row text-center> 
+    html_str=`<div class='row text-center'> 
                 <div class='col-12 text-center mt-4'>
-                <p>Всего ОКН по заданным фильтрам: <h2 id='bigNumber>`+data[0]+`</h2></p>
+                <p>Всего ОКН по заданным фильтрам: <h2 id='bigNumber'>`+data[0]+`</h2></p>
                 </div>
               </div>`;
     document.getElementById('chartdiv').innerHTML=html_str;          
