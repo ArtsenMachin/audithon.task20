@@ -109,109 +109,119 @@ def regions_get():
     ))
 
 
+def region_and_cult_value(region, value, state):
+    if region == 'all':
+        regions = 0
+    else:
+	    regions = int(region)
+
+    return get_data(
+        "select "
+        "cc.culture_cathegory_name_cval, "
+        "rh.region_name_cval, "
+        "coalesce(count(c.object_id), 0) cath_name_count, "
+        "os.state_name_cval "
+        'from dev.cultural_object_hist c '
+        "full join dev.map_region_cathegory mrc "
+        "on mrc.culture_cathegory_id = c.culture_cathegory_id_nval "
+        "and mrc.region_id = c.region_id_nval "
+        "and mrc.state_id = c.state_id_nval "
+        "right join dev.culture_cathegory_hist cc "
+        "on cc.culture_cathegory_id = mrc.culture_cathegory_id "
+        "right join dev.region_hist rh "
+        "on mrc.region_id = rh.region_id "
+        "right join dev.object_state_hist os "
+        "on os.state_id = mrc.state_id "
+        "where (%i = 0 or mrc.region_id = %i) "
+        "and (cc.system_name_cval = '%s' or '%s' = 'all') "
+        "and (os.system_name_cval = '%s' or '%s' = 'all') "
+        "group by os.state_name_cval, cc.culture_cathegory_name_cval, rh.region_name_cval "
+        "order by rh.region_name_cval, cc.culture_cathegory_name_cval "
+        % (regions, regions, value, value, state, state)
+    )
+
+
 def diagrams(regions, cult_value, state):
 
-	# все регионы, все значения, все состояния
-	if (regions == 'all' and cult_value == 'all' and state == 'all'):
-		cul_value = get_data(
-			"select "
-			"cc.culture_cathegory_name_cval, "
-			"rh.region_name_cval, "
-			"coalesce(count(c.object_id), 0) cath_name_count "
-			"from dev.cultural_object_hist c "
-			"full join dev.map_region_cathegory mrc "
-			"on mrc.culture_cathegory_id = c.culture_cathegory_id_nval and mrc.region_id = c.region_id_nval "
-			"right join dev.culture_cathegory_hist cc "
-			"on cc.culture_cathegory_id = mrc.culture_cathegory_id "
-			"right join dev.region_hist rh "
-			"on mrc.region_id = rh.region_id "
-			"group by cc.culture_cathegory_name_cval, rh.region_name_cval "
-			"order by rh.region_name_cval"
-		)
+    # все регионы, все значение, 1 состояние
+    if (regions == 'all' and cult_value == 'all' and state != 'all'):
+        cul_value = region_and_cult_value('all', 'all', state)
 
-		json_inf = json_serializable()
-		object_id = 0
+        json_inf = json_serializable()
+        object_id = 0
 
-		for i in range(0, len(cul_value), 4):
-			json_inf.add_features("category", cul_value[i][1], object_id)
-			json_inf.add_features("first", cul_value[i+3][2], object_id)
-			json_inf.add_features("second", cul_value[i+1][2], object_id)
-			json_inf.add_features("third", cul_value[i+2][2], object_id)
-			json_inf.add_features("fourth", cul_value[i][2], object_id)
-			json_inf.add_new_features_item()
-			object_id += 1
+        for i in range(0, len(cul_value), 4):
+            json_inf.add_features("category", cul_value[i][1], object_id)
+            json_inf.add_features("first", cul_value[i+3][2], object_id)
+            json_inf.add_features("second", cul_value[i+1][2], object_id)
+            json_inf.add_features("third", cul_value[i+2][2], object_id)
+            json_inf.add_features("fourth", cul_value[i][2], object_id)
+            json_inf.add_new_features_item()
+            object_id += 1
 
-		del json_inf.features[-1]
-		return(jsonify(json_inf.features))
+        del json_inf.features[-1]
+        return(jsonify(json_inf.features))
 
-	# 1 регион, все значения, все состояния
-	elif (regions != 'all' and cult_value == 'all' and state == 'all'):
-		cul_value = get_data(
-			"select "
-				"cc.culture_cathegory_name_cval, "
-				"rh.region_name_cval, "
-				"coalesce(count(c.object_id), 0) cath_name_count "
-			"from dev.cultural_object_hist c "
-			"full join dev.map_region_cathegory mrc "
-				"on mrc.culture_cathegory_id = c.culture_cathegory_id_nval "
-				"and mrc.region_id = c.region_id_nval "
-			"right join dev.culture_cathegory_hist cc "
-				"on cc.culture_cathegory_id = mrc.culture_cathegory_id "
-			"right join dev.region_hist rh "
-				"on mrc.region_id = rh.region_id "
-			"where rh.region_id = %i "
-			"group by cc.culture_cathegory_name_cval, rh.region_name_cval "
-			"order by rh.region_name_cval, cc.culture_cathegory_name_cval " %int(regions)
-		)
+    # 1 регион, все значения, 1 состояние
+    elif (regions != 'all' and cult_value == 'all' and state != 'all'):
+        cul_value = region_and_cult_value(regions, 'all', state)
 
-		json_inf = json_serializable()
+        json_inf = json_serializable()
 
-		json_inf.add_features("category", cul_value[0][1], 0)
-		json_inf.add_features("first", cul_value[3][2], 0)
-		json_inf.add_features("second", cul_value[1][2], 0)
-		json_inf.add_features("third", cul_value[2][2], 0)
-		json_inf.add_features("fourth", cul_value[0][2], 0)
+        json_inf.add_features("category", cul_value[0][1], 0)
+        json_inf.add_features("first", cul_value[3][2], 0)
+        json_inf.add_features("second", cul_value[1][2], 0)
+        json_inf.add_features("third", cul_value[2][2], 0)
+        json_inf.add_features("fourth", cul_value[0][2], 0)
 
-		return(jsonify(json_inf.features))
+        return(jsonify(json_inf.features))
 
-	# 1 регион, 1 значение, все состояния
-	elif (regions != 'all' and cult_value  != 'all' and state == 'all'):
-		cul_value = get_data(
-			"select "
-				"cc.culture_cathegory_name_cval, "
-				"rh.region_name_cval, "
-				"coalesce(count(c.object_id), 0) cath_name_count "
-			"from dev.cultural_object_hist c "
-			"full join dev.map_region_cathegory mrc "
-				"on mrc.culture_cathegory_id = c.culture_cathegory_id_nval "
-				"and mrc.region_id = c.region_id_nval "
-			"right join dev.culture_cathegory_hist cc "
-				"on cc.culture_cathegory_id = mrc.culture_cathegory_id "
-			"right join dev.region_hist rh "
-				"on mrc.region_id = rh.region_id "
-			"where rh.region_id = %i and cc.system_name_cval = '%s' "
-			"group by cc.culture_cathegory_name_cval, rh.region_name_cval "
-			"order by rh.region_name_cval, cc.culture_cathegory_name_cval "
-			% (int(regions), cult_value)
-		)
+    # 1 регион, 1 значение, 1 состояние
+    elif (regions != 'all' and cult_value != 'all' and state != 'all'):
+        cul_value = region_and_cult_value(regions, cult_value, state)
+        return(str(cul_value[0][2]))
+    # 1 регион, все значения, все состояния
+    elif (regions != 'all' and cult_value == 'all' and state == 'all'):
+        cul_value = region_and_cult_value(regions, 'all', 'all')
 
-		json_inf = json_serializable()
+        json_inf = json_serializable()
+        object_id = 0
 
-		json_inf.add_features("state", cul_value[0][0], 0)
-		json_inf.add_features("value", cul_value[0][2], 0)
+        for i in range(0, len(cul_value), 4):
+            json_inf.add_features("category", cul_value[i][1], 0)
+            json_inf.add_features("first", cul_value[i+2][2], 0)
+            json_inf.add_features("second", cul_value[i+1][2], 0)
+            json_inf.add_features("third", cul_value[i+3][2], 0)
+            json_inf.add_features("fourth", cul_value[i][2], 0)
+            json_inf.add_new_features_item()
+            object_id += 1
 
-		return(jsonify(json_inf.features))
-		# 			# 1 регион, все значения, 1 состояние
-		#			elif (regions != 'all' and cult_value == 'all' and state != 'all'):
+        del json_inf.features[-1]
+        return(jsonify(json_inf.features))
+    # все регионы, 1 значение, все состояния
+    elif (regions == 'all' and cult_value != 'all' and state == 'all'):
+        cul_value = region_and_cult_value('all', cult_value, 'all')
 
-        # 				# все регионы, 1 значение, все состояния
-        #				elif (regions == 'all' and cult_value != 'all' and state == 'all'):
+        json_inf = json_serializable()
+        object_id = 0
 
-        # 					# все регионы, 1 значение, 1 состояние
-        # 					elif (regions == 'all' and cult_value != 'all' and state != 'all'):
+        for i in range(0, len(cul_value), 4):
+            json_inf.add_features("category", cul_value[i][1], 0)
+            json_inf.add_features("first", cul_value[i+2][2], 0)
+            json_inf.add_features("second", cul_value[i+1][2], 0)
+            json_inf.add_features("third", cul_value[i+3][2], 0)
+            json_inf.add_features("fourth", cul_value[i][2], 0)
+            json_inf.add_new_features_item()
+            object_id += 1
 
-        # 						# все регионы, все значение, 1 состояние
-        #						elif (regions == 'all' and cult_value == 'all' and state != 'all'):
-
-        # 							# 1 регион, 1 значение, 1 состояние
-        #							else:
+        del json_inf.features[-1]
+        return(jsonify(json_inf.features))
+    # все регионы, 1 значение, 1 состояние
+    elif (regions == 'all' and cult_value != 'all' and state != 'all'):
+        return 4
+    # все регионы, все значения, все состояния
+    elif (regions == 'all' and cult_value == 'all' and state == 'all'):
+        return 3
+    # 1 регион, 1 значение, все состояния
+    else:
+        return 1
