@@ -1254,14 +1254,18 @@ function drawSt(dataAll){
 }
 /**1 регион, 1 значение, 1 состояние */
 function drawRegImpSt(data){
-    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    document.getElementById('charts').innerHTML=`<div id='chartdiv'></div>`;
     try{
         document.getElementById('chartdivS').innerHTML='';}
     catch{}
     html_str='';
+
+    console.log(data);
     html_str=`<div class='row text-center'> 
                 <div class='col-12 text-center mt-4'>
-                <p>Всего ОКН по заданным фильтрам: <h2 id='bigNumber'>`+data[0]+`</h2></p>
+                <p>Всего ОКН по заданным фильтрам: 
+                    <h2 id='bigNumber'>`+data+`</h2></p>
+
                 </div>
               </div>`;
     document.getElementById('chartdiv').innerHTML=html_str;          
