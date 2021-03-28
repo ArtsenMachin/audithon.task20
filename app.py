@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
-from models.models import map_baloon_data, regions_get, diagrams
+from models.models import map_baloon_data, regions_get, diagrams, add_new
 import os
 import json
 
@@ -53,6 +53,19 @@ def diagrams_info2():
 @app.route('/form', methods=['GET'])
 def redirect():
     return render_template("form.html")
+
+
+@app.route('/server', methods=['GET'])
+def server():
+    name = request.args['name']
+    typeo = request.args['type']
+    importance = request.args['importance']
+    adress = request.args['adress']
+    coordinate = request.args['coordinate']
+    comment = request.args['comment']
+    data = request.args['data']
+    add_new(name, typeo, importance, adress, coordinate, comment, data)
+    return 'success'
 
 
 if __name__ == "__main__":

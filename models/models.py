@@ -221,7 +221,30 @@ def diagrams(regions, cult_value, state):
         return 4
     # все регионы, все значения, все состояния
     elif (regions == 'all' and cult_value == 'all' and state == 'all'):
-        return 3
+        cul_value = region_and_cult_value('all', 'all', state)
+
+        json_inf = json_serializable()
+        object_id = 0
+
+        for i in range(0, len(cul_value), 4):
+            json_inf.add_features("category", cul_value[i][1], object_id)
+            json_inf.add_features("first", cul_value[i+3][2], object_id)
+            json_inf.add_features("second", cul_value[i+1][2], object_id)
+            json_inf.add_features("third", cul_value[i+2][2], object_id)
+            json_inf.add_features("fourth", cul_value[i][2], object_id)
+            json_inf.add_new_features_item()
+            object_id += 1
+
+        del json_inf.features[-1]
+        return(jsonify(json_inf.features))
     # 1 регион, 1 значение, все состояния
     else:
         return 1
+
+
+def add_new(name, typeo, importance, adress, coordinate, comment, data):
+    cursor.execute("insert into dev.user_form_new_okn(object_name_cval, object_type_id_nval, culture_cathegory_id_nval, full_address_cval, coordinates_cval, comment_cval, image_path_cval) "
+        " values('%s',%i,%i,'%s','%s','%s','%s')" %(name, int(typeo), int(importance), adress,
+        coordinate, comment, data)
+    )
+    conn.commit()
