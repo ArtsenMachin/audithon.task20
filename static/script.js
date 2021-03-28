@@ -169,13 +169,14 @@ function ShowDiagrams(){
                                 <option value='ud'>удовлетворительное</option>
                                 <option value='neud'>неудовлетворительное</option>
                                 <option value='utr'>утраченные</option>
+                                <option value='na'>N/A</option>
                             </select>
                         </div>
                         <div class='col-6 col-lg-3'>
                         <button class="btnF btnFiltr" onclick='drawDiagrams()'>Применить фильтры</button>
                         </div>
                         <div class='col-12'>
-                            <div id="chartdiv"></div>
+                            <div id="charts"></div>
                         </div>
                     </div>`;
         document.getElementById('diagrams').innerHTML=html_str;
@@ -241,38 +242,116 @@ function drawDiagrams(){
     });
 }
 /**все регионы, все значения, все состояния */
-function drawAll(data){
+function drawAll(dataAll){
+    
+    document.getElementById('charts').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class='d-block w-100 chart' id='chartdiv0'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv1'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv2'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv3'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv4'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv5'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv6'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv7'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv8'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv9'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv10'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv11'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv12'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv13'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv14'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv15'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv16'></div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>`;
+       try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
 
+    let data= new Array(9);
+    for (i=0; i<17; i++){
+        data[i]=[];
+    }
+    for (let i=0; i<17; i++){
+        for (let j=0; j<6; j++){
+            data[i][j]=dataAll[i+j];
+        }
+    }
     am4core.ready(function() {
         
-        try{
-        document.getElementById('chartdiv').innerHTML='';
-        document.getElementById('chartdiv1').innerHTML='';}
-        catch{console.log('eroor blin');}
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
         // Themes end
-                
-        var chart = am4core.create('chartdiv', am4charts.XYChart)
-        chart.colors.step = 2;
+        let chart=[];
+        for (let i=0; i<17; i++){
+        chart[i] = am4core.create('chartdiv'+i+'', am4charts.XYChart)
+        chart[i].colors.step = 2;
         
-        chart.legend = new am4charts.Legend()
-        chart.legend.position = 'top'
-        chart.legend.paddingBottom = 20
-        chart.legend.labels.template.maxWidth = 95
+        chart[i].legend = new am4charts.Legend()
+        chart[i].legend.position = 'top'
+        chart[i].legend.paddingBottom = 20
+        chart[i].legend.labels.template.maxWidth = 95
         
-        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        var xAxis = chart[i].xAxes.push(new am4charts.CategoryAxis())
         xAxis.dataFields.category = 'category'
         xAxis.renderer.cellStartLocation = 0.1
         xAxis.renderer.cellEndLocation = 0.9
         xAxis.renderer.grid.template.location = 0;
         
-        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        var yAxis = chart[i].yAxes.push(new am4charts.ValueAxis());
         yAxis.min = 0;
         
         function createSeries(value, name) {
-            var series = chart.series.push(new am4charts.ColumnSeries())
+            var series = chart[i].series.push(new am4charts.ColumnSeries())
             series.dataFields.valueY = value
             series.dataFields.categoryX = 'category'
             series.name = name
@@ -289,7 +368,7 @@ function drawAll(data){
             return series;
         }
         
-        chart.data = data;        
+        chart[i].data = data[i];        
         
         createSeries('first', 'Федеральное значение');
         createSeries('second', 'Региональное значение');
@@ -298,31 +377,31 @@ function drawAll(data){
         
         function arrangeColumns() {
         
-            var series = chart.series.getIndex(0);
+            var series = chart[i].series.getIndex(0);
         
             var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
             if (series.dataItems.length > 1) {
                 var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
                 var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                var delta = ((x1 - x0) / chart.series.length) * w;
+                var delta = ((x1 - x0) / chart[i].series.length) * w;
                 if (am4core.isNumber(delta)) {
-                    var middle = chart.series.length / 2;
+                    var middle = chart[i].series.length / 2;
         
                     var newIndex = 0;
-                    chart.series.each(function(series) {
+                    chart[i].series.each(function(series) {
                         if (!series.isHidden && !series.isHiding) {
                             series.dummyData = newIndex;
                             newIndex++;
                         }
                         else {
-                            series.dummyData = chart.series.indexOf(series);
+                            series.dummyData = chart[i].series.indexOf(series);
                         }
                     })
                     var visibleCount = newIndex;
                     var newMiddle = visibleCount / 2;
         
-                    chart.series.each(function(series) {
-                        var trueIndex = chart.series.indexOf(series);
+                    chart[i].series.each(function(series) {
+                        var trueIndex = chart[i].series.indexOf(series);
                         var newIndex = series.dummyData;
         
                         var dx = (newIndex - trueIndex + middle - newMiddle) * delta
@@ -332,9 +411,11 @@ function drawAll(data){
                     })
                 }
             }
-        }
-        
+         }
+        }        
     });
+
+
 
     var n = document.getElementById('region_select').options.selectedIndex;    
     region_temp = document.getElementById('region_select').options[n].value;
@@ -354,35 +435,35 @@ function drawAll(data){
 
         var div = document.createElement("div");
         div.setAttribute("class", "col-12");
-        div.innerHTML='<div id="chartdiv1"></div>';
+        div.innerHTML='<div id="chartdivS"></div>';
         document.getElementById('diagramsContent').appendChild(div);
         am4core.ready(function() {
 
-            document.getElementById('chartdiv1').innerHTML='';
+            document.getElementById('chartdivS').innerHTML='';
             // Themes begin
             am4core.useTheme(am4themes_material);
             am4core.useTheme(am4themes_animated);
             // Themes end
                     
-            var chart1 = am4core.create('chartdiv1', am4charts.XYChart)
-            chart1.colors.step = 2;
+            var chartdivS = am4core.create('chartdivS', am4charts.XYChart)
+            chartdivS.colors.step = 2;
             
-            chart1.legend = new am4charts.Legend()
-            chart1.legend.position = 'top'
-            chart1.legend.paddingBottom = 20
-            chart1.legend.labels.template.maxWidth = 95
+            chartdivS.legend = new am4charts.Legend()
+            chartdivS.legend.position = 'top'
+            chartdivS.legend.paddingBottom = 20
+            chartdivS.legend.labels.template.maxWidth = 95
             
-            var xAxis = chart1.xAxes.push(new am4charts.CategoryAxis())
+            var xAxis = chartdivS.xAxes.push(new am4charts.CategoryAxis())
             xAxis.dataFields.category = 'category'
             xAxis.renderer.cellStartLocation = 0.1
             xAxis.renderer.cellEndLocation = 0.9
             xAxis.renderer.grid.template.location = 0;
             
-            var yAxis = chart1.yAxes.push(new am4charts.ValueAxis());
+            var yAxis = chartdivS.yAxes.push(new am4charts.ValueAxis());
             yAxis.min = 0;
             
             function createSeries(value, name) {
-                var series = chart1.series.push(new am4charts.ColumnSeries())
+                var series = chartdivS.series.push(new am4charts.ColumnSeries())
                 series.dataFields.valueY = value
                 series.dataFields.categoryX = 'category'
                 series.name = name
@@ -399,24 +480,25 @@ function drawAll(data){
                 return series;
             }
             
-            chart1.data = data;
+            chartdivS.data = data;
         
             
             createSeries('first', 'Удовлетворительное состояние');
             createSeries('second', 'Неуловлетворительное состояние');
             createSeries('third', 'Утраченные');
+            createSeries('fourth', 'n/a');
             
             function arrangeColumns() {
             
-                var series = chart1.series.getIndex(0);
+                var series = chartdivS.series.getIndex(0);
             
                 var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
                 if (series.dataItems.length > 1) {
                     var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
                     var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                    var delta = ((x1 - x0) / chart1.series.length) * w;
+                    var delta = ((x1 - x0) / chartdivS.series.length) * w;
                     if (am4core.isNumber(delta)) {
-                        var middle = chart1.series.length / 2;
+                        var middle = chartdivS.series.length / 2;
             
                         var newIndex = 0;
                         chart1.series.each(function(series) {
@@ -432,7 +514,7 @@ function drawAll(data){
                         var newMiddle = visibleCount / 2;
             
                         chart1.series.each(function(series) {
-                            var trueIndex = chart1.series.indexOf(series);
+                            var trueIndex = chartdivS.series.indexOf(series);
                             var newIndex = series.dummyData;
             
                             var dx = (newIndex - trueIndex + middle - newMiddle) * delta
@@ -451,10 +533,13 @@ function drawAll(data){
 /**1 регион, все значения, все состояния */
 function drawReg(data){
 
-    document.getElementById('chartdiv1').innerHTML='';
+    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
     am4core.ready(function() {
 
-        document.getElementById('chartdiv').innerHTML='';
+        
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
@@ -500,6 +585,7 @@ function drawReg(data){
         createSeries('first', 'Удовлетворительное состояние');
         createSeries('second', 'Неуловлетворительное состояние');
         createSeries('third', 'Утраченные');
+        createSeries('fourth', 'n/a');
         
         function arrangeColumns() {
         
@@ -543,9 +629,11 @@ function drawReg(data){
 }
 /**1 регион, 1 значение, все состояния */
 function drawRegImp(data){
-    document.getElementById('chartdiv1').innerHTML='';
+    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
     am4core.ready(function() {
-        document.getElementById('chartdiv').innerHTML='';
 
         // Themes begin
         am4core.useTheme(am4themes_material);
@@ -578,9 +666,11 @@ function drawRegImp(data){
 }
 /**1 регион, все значения, 1 состояние */
 function drawRegSt(data){
-    document.getElementById('chartdiv1').innerHTML='';
+    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
     am4core.ready(function() {
-        document.getElementById('chartdiv').innerHTML='';
 
         // Themes begin
         am4core.useTheme(am4themes_material);
@@ -611,34 +701,114 @@ function drawRegSt(data){
 }
 /**все регионы, 1 значение, все состояния */
 function drawImp(data){
-    am4core.ready(function() {
+    document.getElementById('charts').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class='d-block w-100 chart' id='chartdiv0'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv1'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv2'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv3'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv4'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv5'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv6'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv7'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv8'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv9'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv10'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv11'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv12'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv13'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv14'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv15'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv16'></div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>`;
+       try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
 
-        document.getElementById('chartdiv').innerHTML='';
-        document.getElementById('chartdiv1').innerHTML='';
+    let data= new Array(9);
+    for (i=0; i<17; i++){
+        data[i]=[];
+    }
+    for (let i=0; i<17; i++){
+        for (let j=0; j<6; j++){
+            data[i][j]=dataAll[i+j];
+        }
+    }
+    am4core.ready(function() {
+        
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
         // Themes end
-                
-        var chart = am4core.create('chartdiv', am4charts.XYChart)
-        chart.colors.step = 2;
+        let chart=[];
+        for (let i=0; i<17; i++){
+        chart[i] = am4core.create('chartdiv'+i+'', am4charts.XYChart)
+        chart[i].colors.step = 2;
         
-        chart.legend = new am4charts.Legend()
-        chart.legend.position = 'top'
-        chart.legend.paddingBottom = 20
-        chart.legend.labels.template.maxWidth = 95
+        chart[i].legend = new am4charts.Legend()
+        chart[i].legend.position = 'top'
+        chart[i].legend.paddingBottom = 20
+        chart[i].legend.labels.template.maxWidth = 95
         
-        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        var xAxis = chart[i].xAxes.push(new am4charts.CategoryAxis())
         xAxis.dataFields.category = 'category'
         xAxis.renderer.cellStartLocation = 0.1
         xAxis.renderer.cellEndLocation = 0.9
         xAxis.renderer.grid.template.location = 0;
         
-        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        var yAxis = chart[i].yAxes.push(new am4charts.ValueAxis());
         yAxis.min = 0;
         
         function createSeries(value, name) {
-            var series = chart.series.push(new am4charts.ColumnSeries())
+            var series = chart[i].series.push(new am4charts.ColumnSeries())
             series.dataFields.valueY = value
             series.dataFields.categoryX = 'category'
             series.name = name
@@ -655,39 +825,40 @@ function drawImp(data){
             return series;
         }
         
-        chart.data = data;
+        chart[i].data = data[i];        
         
         createSeries('first', 'Удовлетворительное состояние');
         createSeries('second', 'Неуловлетворительное состояние');
         createSeries('third', 'Утраченные');
+        createSeries('fourth', 'n/a');
         
         function arrangeColumns() {
         
-            var series = chart.series.getIndex(0);
+            var series = chart[i].series.getIndex(0);
         
             var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
             if (series.dataItems.length > 1) {
                 var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
                 var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                var delta = ((x1 - x0) / chart.series.length) * w;
+                var delta = ((x1 - x0) / chart[i].series.length) * w;
                 if (am4core.isNumber(delta)) {
-                    var middle = chart.series.length / 2;
+                    var middle = chart[i].series.length / 2;
         
                     var newIndex = 0;
-                    chart.series.each(function(series) {
+                    chart[i].series.each(function(series) {
                         if (!series.isHidden && !series.isHiding) {
                             series.dummyData = newIndex;
                             newIndex++;
                         }
                         else {
-                            series.dummyData = chart.series.indexOf(series);
+                            series.dummyData = chart[i].series.indexOf(series);
                         }
                     })
                     var visibleCount = newIndex;
                     var newMiddle = visibleCount / 2;
         
-                    chart.series.each(function(series) {
-                        var trueIndex = chart.series.indexOf(series);
+                    chart[i].series.each(function(series) {
+                        var trueIndex = chart[i].series.indexOf(series);
                         var newIndex = series.dummyData;
         
                         var dx = (newIndex - trueIndex + middle - newMiddle) * delta
@@ -697,17 +868,19 @@ function drawImp(data){
                     })
                 }
             }
-        }
-        
+         }
+        }        
     });
 
 }
 /**все регионы, 1 значение, 1 состояние */
 function drawImpSt(data){
+    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
 
     am4core.ready(function() {
-        document.getElementById('chartdiv').innerHTML='';
-        document.getElementById('chartdiv1').innerHTML='';
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
@@ -766,35 +939,114 @@ function drawImpSt(data){
 }
 /**все регионы, все значение, 1 состояние */
 function drawSt(data){
+    document.getElementById('charts').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class='d-block w-100 chart' id='chartdiv0'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv1'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv2'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv3'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv4'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv5'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv6'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv7'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv8'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv9'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv10'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv11'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv12'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv13'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv14'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv15'></div>
+      </div>
+      <div class="carousel-item">
+      <div class='d-block w-100 chart' id='chartdiv16'></div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>`;
+       try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
 
+    let data= new Array(9);
+    for (i=0; i<17; i++){
+        data[i]=[];
+    }
+    for (let i=0; i<17; i++){
+        for (let j=0; j<6; j++){
+            data[i][j]=dataAll[i+j];
+        }
+    }
     am4core.ready(function() {
-
-        document.getElementById('chartdiv').innerHTML='';
-        document.getElementById('chartdiv1').innerHTML='';
+        
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
         // Themes end
-                
-        var chart = am4core.create('chartdiv', am4charts.XYChart)
-        chart.colors.step = 2;
+        let chart=[];
+        for (let i=0; i<17; i++){
+        chart[i] = am4core.create('chartdiv'+i+'', am4charts.XYChart)
+        chart[i].colors.step = 2;
         
-        chart.legend = new am4charts.Legend()
-        chart.legend.position = 'top'
-        chart.legend.paddingBottom = 20
-        chart.legend.labels.template.maxWidth = 95
+        chart[i].legend = new am4charts.Legend()
+        chart[i].legend.position = 'top'
+        chart[i].legend.paddingBottom = 20
+        chart[i].legend.labels.template.maxWidth = 95
         
-        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        var xAxis = chart[i].xAxes.push(new am4charts.CategoryAxis())
         xAxis.dataFields.category = 'category'
         xAxis.renderer.cellStartLocation = 0.1
         xAxis.renderer.cellEndLocation = 0.9
         xAxis.renderer.grid.template.location = 0;
         
-        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        var yAxis = chart[i].yAxes.push(new am4charts.ValueAxis());
         yAxis.min = 0;
         
         function createSeries(value, name) {
-            var series = chart.series.push(new am4charts.ColumnSeries())
+            var series = chart[i].series.push(new am4charts.ColumnSeries())
             series.dataFields.valueY = value
             series.dataFields.categoryX = 'category'
             series.name = name
@@ -811,9 +1063,7 @@ function drawSt(data){
             return series;
         }
         
-        chart.data = data;
- 
-        
+        chart[i].data = data[i];        
         
         createSeries('first', 'Федеральное значение');
         createSeries('second', 'Региональное значение');
@@ -822,31 +1072,31 @@ function drawSt(data){
         
         function arrangeColumns() {
         
-            var series = chart.series.getIndex(0);
+            var series = chart[i].series.getIndex(0);
         
             var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
             if (series.dataItems.length > 1) {
                 var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
                 var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                var delta = ((x1 - x0) / chart.series.length) * w;
+                var delta = ((x1 - x0) / chart[i].series.length) * w;
                 if (am4core.isNumber(delta)) {
-                    var middle = chart.series.length / 2;
+                    var middle = chart[i].series.length / 2;
         
                     var newIndex = 0;
-                    chart.series.each(function(series) {
+                    chart[i].series.each(function(series) {
                         if (!series.isHidden && !series.isHiding) {
                             series.dummyData = newIndex;
                             newIndex++;
                         }
                         else {
-                            series.dummyData = chart.series.indexOf(series);
+                            series.dummyData = chart[i].series.indexOf(series);
                         }
                     })
                     var visibleCount = newIndex;
                     var newMiddle = visibleCount / 2;
         
-                    chart.series.each(function(series) {
-                        var trueIndex = chart.series.indexOf(series);
+                    chart[i].series.each(function(series) {
+                        var trueIndex = chart[i].series.indexOf(series);
                         var newIndex = series.dummyData;
         
                         var dx = (newIndex - trueIndex + middle - newMiddle) * delta
@@ -856,15 +1106,17 @@ function drawSt(data){
                     })
                 }
             }
-        }
-        
+         }
+        }        
     });
 
 }
 /**1 регион, 1 значение, 1 состояние */
 function drawRegImpSt(data){
-    document.getElementById('chartdiv').innerHTML='';
-    document.getElementById('chartdiv1').innerHTML='';
+    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
+    try{
+        document.getElementById('chartdivS').innerHTML='';}
+    catch{}
     html_str='';
     html_str=`<div class='row text-center> 
                 <div class='col-12 text-center mt-4'>

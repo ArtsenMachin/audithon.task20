@@ -83,7 +83,7 @@
     display: none;
 }
 
-#chartdiv, #chartdiv1 {
+#chartdiv, #chartdiv1, .chart {
     width: 100%;
     height: 500px;
     position: relative;
