@@ -184,8 +184,6 @@ function ShowDiagrams(){
             url: "/select_diagrams"
         }).done(function (data) {
             select_data=JSON.parse(data);
-            console.log(data);
-            console.log(select_data);
             html_str='';
             for(let i=0; i<select_data.length; i++){
                 $('#region_select').append("<option value="+select_data[i][0]+">"+select_data[i][1]+"</option>");
@@ -210,7 +208,7 @@ function drawDiagrams(){
         url: "/diagrams",
         data:{regions: region_temp,cult_value: important_temp,state:state_temp}
     }).done(function (data) {
-
+        data = JSON.parse(data);
         if(region_temp=='all'&&important_temp=='all'&&state_temp=='all'){ /**все регионы, все значения, все состояния */
             drawAll(data);
         }else{
@@ -291,38 +289,7 @@ function drawAll(data){
             return series;
         }
         
-        chart.data = data;
-        /*[
-            {
-                category: 'Place #1',
-                first: 40,
-                second: 55,
-                third: 60,
-                fourth: 40
-            },
-            {
-                category: 'Place #2',
-                first: 30,
-                second: 78,
-                third: 69,
-                fourth: 40
-            },
-            {
-                category: 'Place #3',
-                first: 27,
-                second: 40,
-                third: 45,
-                fourth: 40
-            },
-            {
-                category: 'Place #4',
-                first: 50,
-                second: 33,
-                third: 22,
-                fourth: 40
-            }
-        ]*/
-        
+        chart.data = data;        
         
         createSeries('first', 'Федеральное значение');
         createSeries('second', 'Региональное значение');
@@ -590,29 +557,6 @@ function drawRegImp(data){
         
         // Add data
         chart.data = data;
-        /*[ {
-          "state": "Lithuania",
-          "value": 501.9
-        }, {
-          "state": "Czechia",
-          "value": 301.9
-        }, {
-          "state": "Ireland",
-          "value": 201.1
-        }, {
-          "state": "Germany",
-          "value": 165.8
-        }, {
-          "state": "Australia",
-          "value": 139.9
-        }, {
-          "state": "Austria",
-          "value": 128.3
-        }, {
-          "state": "UK",
-          "value": 99
-        }
-        ];*/
         
         // Add and configure Series
         var pieSeries = chart.series.push(new am4charts.PieSeries());
@@ -775,43 +719,6 @@ function drawImpSt(data){
         
         // Add data
         chart.data = data;
-        /*[{
-          "country": "USA",
-          "visits": 3025
-        }, {
-          "country": "China",
-          "visits": 1882
-        }, {
-          "country": "Japan",
-          "visits": 1809
-        }, {
-          "country": "Germany",
-          "visits": 1322
-        }, {
-          "country": "UK",
-          "visits": 1122
-        }, {
-          "country": "France",
-          "visits": 1114
-        }, {
-          "country": "India",
-          "visits": 984
-        }, {
-          "country": "Spain",
-          "visits": 711
-        }, {
-          "country": "Netherlands",
-          "visits": 665
-        }, {
-          "country": "Russia",
-          "visits": 580
-        }, {
-          "country": "South Korea",
-          "visits": 443
-        }, {
-          "country": "Canada",
-          "visits": 441
-        }];*/
         
         // Create axes
         var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -905,36 +812,7 @@ function drawSt(data){
         }
         
         chart.data = data;
-        /*[
-            {
-                category: 'Place #1',
-                first: 40,
-                second: 55,
-                third: 60,
-                fourth: 40
-            },
-            {
-                category: 'Place #2',
-                first: 30,
-                second: 78,
-                third: 69,
-                fourth: 40
-            },
-            {
-                category: 'Place #3',
-                first: 27,
-                second: 40,
-                third: 45,
-                fourth: 40
-            },
-            {
-                category: 'Place #4',
-                first: 50,
-                second: 33,
-                third: 22,
-                fourth: 40
-            }
-        ]*/
+ 
         
         
         createSeries('first', 'Федеральное значение');
@@ -995,9 +873,3 @@ function drawRegImpSt(data){
               </div>`;
     document.getElementById('chartdiv').innerHTML=html_str;          
 }
-
-// function toForm(){
-//     $.ajax({
-//         url: "/to_form"
-//     })
-// }
