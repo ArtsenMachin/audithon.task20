@@ -55,5 +55,18 @@ def redirect():
     return render_template("form.html")
 
 
+@app.route('/server', methods=['GET'])
+def server():
+    name = request.args['name']
+    typeo = request.args['type']
+    importance = request.args['importance']
+    adress = request.args['adress']
+    coordinate = request.args['coordinate']
+    comment = request.args['comment']
+    data = request.args['data']
+
+    return 'success'
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="26.173.145.160", port='5000')
