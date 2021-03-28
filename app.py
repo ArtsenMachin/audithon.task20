@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, send_from_directory
-from models.models import map_baloon_data, regions_get, diagrams
+from models.models import map_baloon_data, regions_get, diagrams, add_new
 import os
 import json
 
@@ -64,7 +64,7 @@ def server():
     coordinate = request.args['coordinate']
     comment = request.args['comment']
     data = request.args['data']
-
+    add_new(name, typeo, importance, adress, coordinate, comment, data)
     return 'success'
 
 

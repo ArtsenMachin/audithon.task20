@@ -240,3 +240,11 @@ def diagrams(regions, cult_value, state):
     # 1 регион, 1 значение, все состояния
     else:
         return 1
+
+
+def add_new(name, typeo, importance, adress, coordinate, comment, data):
+    cursor.execute("insert into dev.user_form_new_okn(object_name_cval, object_type_id_nval, culture_cathegory_id_nval, full_address_cval, coordinates_cval, comment_cval, image_path_cval) "
+        " values('%s',%i,%i,'%s','%s','%s','%s')" %(name, int(typeo), int(importance), adress,
+        coordinate, comment, data)
+    )
+    conn.commit()

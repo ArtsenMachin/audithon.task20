@@ -12,55 +12,12 @@ function toServer(){
     adress=document.getElementById('adress_input').value;
     x=document.getElementById('coordinatex_input').value;
     y=document.getElementById('coordinatey_input').value;
-    let coordinate=[x,y];
+    let coordinate=x+', '+y;
     comment=document.getElementById('comment_input').value;
+	let data = 'Нет вложения';
 
-    file=document.getElementById('image_input').files;
-
-    if( typeof file == 'undefined' ) return;
-
-	var data = new FormData();
-
-	$.each(file, function( key, value ){
-		data.append( key, value );
-	});
-
-	data.append( 'my_file_upload', 1 );
-
-	$.ajax({
-		url         : '/server',
-		type        : 'POST', 
-		data        : {name, type, importance, adress, coordinate, comment, data},
-		cache       : false,
-		dataType    : 'json',
-		
-		processData : false,
-		
-		contentType : false, 
-		
-		success     : function( respond, status, jqXHR ){
-
-			
-			if( typeof respond.error === 'undefined' ){
-				
-				var files_path = respond.files;
-				var html = '';
-				$.each( files_path, function( key, val ){
-					 html += val +'<br>';
-				} )
-
-				$('.ajax-reply').html( html );
-			}
-			
-			else {
-				console.log('ОШИБКА: ' + respond.data );
-			}
-		},
-
-		error: function( jqXHR, status, errorThrown ){
-			console.log( 'ОШИБКА AJAX запроса: ' + status, jqXHR );
-		}
-
-	});
-
+		$.ajax({
+            url: "/server", 
+            data        : {name, type, importance, adress, coordinate, comment, data},
+        })
 }
