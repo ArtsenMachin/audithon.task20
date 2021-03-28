@@ -249,6 +249,20 @@ function drawAll(dataAll){
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
       <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
       <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="10"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="11"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="12"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="13"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="14"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="15"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="16"></li>
     </ol>
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -321,8 +335,8 @@ function drawAll(dataAll){
         data[i]=[];
     }
     for (let i=0; i<17; i++){
-        for (let j=0; j<6; j++){
-            data[i][j]=dataAll[i+j];
+        for (let j=0; j<5; j++){
+            data[i][j]=dataAll[i*5+j];
         }
     }
     am4core.ready(function() {
@@ -428,105 +442,197 @@ function drawAll(dataAll){
         url: "/diagrams2",
         data:{regions: region_temp,cult_value: important_temp,state:state_temp}
     }).done(function (data) {
+        data=JSON.parse(data)
         drawAllSecond(data);
     });
 }
-    function drawAllSecond(data){
+    function drawAllSecond(dataAll){
 
         var div = document.createElement("div");
         div.setAttribute("class", "col-12");
         div.innerHTML='<div id="chartdivS"></div>';
         document.getElementById('diagramsContent').appendChild(div);
-        am4core.ready(function() {
-
-            document.getElementById('chartdivS').innerHTML='';
-            // Themes begin
-            am4core.useTheme(am4themes_material);
-            am4core.useTheme(am4themes_animated);
-            // Themes end
-                    
-            var chartdivS = am4core.create('chartdivS', am4charts.XYChart)
-            chartdivS.colors.step = 2;
-            
-            chartdivS.legend = new am4charts.Legend()
-            chartdivS.legend.position = 'top'
-            chartdivS.legend.paddingBottom = 20
-            chartdivS.legend.labels.template.maxWidth = 95
-            
-            var xAxis = chartdivS.xAxes.push(new am4charts.CategoryAxis())
-            xAxis.dataFields.category = 'category'
-            xAxis.renderer.cellStartLocation = 0.1
-            xAxis.renderer.cellEndLocation = 0.9
-            xAxis.renderer.grid.template.location = 0;
-            
-            var yAxis = chartdivS.yAxes.push(new am4charts.ValueAxis());
-            yAxis.min = 0;
-            
-            function createSeries(value, name) {
-                var series = chartdivS.series.push(new am4charts.ColumnSeries())
-                series.dataFields.valueY = value
-                series.dataFields.categoryX = 'category'
-                series.name = name
-            
-                series.events.on("hidden", arrangeColumns);
-                series.events.on("shown", arrangeColumns);
-            
-                var bullet = series.bullets.push(new am4charts.LabelBullet())
-                bullet.interactionsEnabled = false
-                bullet.dy = 30;
-                bullet.label.text = '{valueY}'
-                bullet.label.fill = am4core.color('#ffffff')
-            
-                return series;
-            }
-            
-            chartdivS.data = data;
+        document.getElementById('chartdivS').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="10"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="11"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="12"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="13"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="14"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="15"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="16"></li>
+                </ol>
+                <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class='d-block w-100 chart' id='chartdiv0'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs1'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs2'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs3'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs4'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs5'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs6'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs7'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs8'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs9'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs10'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs11'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs12'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs13'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs14'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs15'></div>
+                </div>
+                <div class="carousel-item">
+                <div class='d-block w-100 chart' id='chartdivs16'></div>
+                </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+                </a>
+            </div>`;
+   
+    let data= new Array(9);
+    for (i=0; i<17; i++){
+        data[i]=[];
+    }
+    for (let i=0; i<17; i++){
+        for (let j=0; j<5; j++){
+            data[i][j]=dataAll[i*5+j];
+        }
+    }
+    am4core.ready(function() {
         
-            
-            createSeries('first', 'Удовлетворительное состояние');
-            createSeries('second', 'Неуловлетворительное состояние');
-            createSeries('third', 'Утраченные');
-            createSeries('fourth', 'n/a');
-            
-            function arrangeColumns() {
-            
-                var series = chartdivS.series.getIndex(0);
-            
-                var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
-                if (series.dataItems.length > 1) {
-                    var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
-                    var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
-                    var delta = ((x1 - x0) / chartdivS.series.length) * w;
-                    if (am4core.isNumber(delta)) {
-                        var middle = chartdivS.series.length / 2;
-            
-                        var newIndex = 0;
-                        chart1.series.each(function(series) {
-                            if (!series.isHidden && !series.isHiding) {
-                                series.dummyData = newIndex;
-                                newIndex++;
-                            }
-                            else {
-                                series.dummyData = chart1.series.indexOf(series);
-                            }
-                        })
-                        var visibleCount = newIndex;
-                        var newMiddle = visibleCount / 2;
-            
-                        chart1.series.each(function(series) {
-                            var trueIndex = chartdivS.series.indexOf(series);
-                            var newIndex = series.dummyData;
-            
-                            var dx = (newIndex - trueIndex + middle - newMiddle) * delta
-            
-                            series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
-                            series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
-                        })
-                    }
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+        let chart=[];
+        for (let i=0; i<17; i++){
+        chart[i] = am4core.create('chartdiv'+i+'', am4charts.XYChart)
+        chart[i].colors.step = 2;
+        
+        chart[i].legend = new am4charts.Legend()
+        chart[i].legend.position = 'top'
+        chart[i].legend.paddingBottom = 20
+        chart[i].legend.labels.template.maxWidth = 95
+        
+        var xAxis = chart[i].xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+        
+        var yAxis = chart[i].yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        
+        function createSeries(value, name) {
+            var series = chart[i].series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+        
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+        
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.text = '{valueY}'
+            bullet.label.fill = am4core.color('#ffffff')
+        
+            return series;
+        }
+        
+        chart[i].data = data[i];        
+        
+        createSeries('first', 'Удовлетворительное состояние');
+        createSeries('second', 'Неуловлетворительное состояние');
+        createSeries('third', 'Утраченные');
+        createSeries('fourth', 'N/A');
+        
+        function arrangeColumns() {
+        
+            var series = chart[i].series.getIndex(0);
+        
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart[i].series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart[i].series.length / 2;
+        
+                    var newIndex = 0;
+                    chart[i].series.each(function(series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart[i].series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+        
+                    chart[i].series.each(function(series) {
+                        var trueIndex = chart[i].series.indexOf(series);
+                        var newIndex = series.dummyData;
+        
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+        
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
                 }
             }
-            
-        });
+         }
+        }        
+    });
 
     }
 
@@ -585,7 +691,7 @@ function drawReg(data){
         createSeries('first', 'Удовлетворительное состояние');
         createSeries('second', 'Неуловлетворительное состояние');
         createSeries('third', 'Утраченные');
-        createSeries('fourth', 'n/a');
+        createSeries('fourth', 'N/A');
         
         function arrangeColumns() {
         
@@ -700,12 +806,26 @@ function drawRegSt(data){
         });
 }
 /**все регионы, 1 значение, все состояния */
-function drawImp(data){
+function drawImp(dataAll){
     document.getElementById('charts').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
-      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="10"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="11"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="12"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="13"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="14"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="15"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="16"></li>
     </ol>
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -778,8 +898,8 @@ function drawImp(data){
         data[i]=[];
     }
     for (let i=0; i<17; i++){
-        for (let j=0; j<6; j++){
-            data[i][j]=dataAll[i+j];
+        for (let j=0; j<5; j++){
+            data[i][j]=dataAll[i*5+j];
         }
     }
     am4core.ready(function() {
@@ -830,7 +950,7 @@ function drawImp(data){
         createSeries('first', 'Удовлетворительное состояние');
         createSeries('second', 'Неуловлетворительное состояние');
         createSeries('third', 'Утраченные');
-        createSeries('fourth', 'n/a');
+        createSeries('fourth', 'N/A');
         
         function arrangeColumns() {
         
@@ -938,12 +1058,26 @@ function drawImpSt(data){
 
 }
 /**все регионы, все значение, 1 состояние */
-function drawSt(data){
+function drawSt(dataAll){
     document.getElementById('charts').innerHTML=`<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
-      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="10"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="11"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="12"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="13"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="14"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="15"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="16"></li>
     </ol>
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -1016,8 +1150,8 @@ function drawSt(data){
         data[i]=[];
     }
     for (let i=0; i<17; i++){
-        for (let j=0; j<6; j++){
-            data[i][j]=dataAll[i+j];
+        for (let j=0; j<5; j++){
+            data[i][j]=dataAll[i*5+j];
         }
     }
     am4core.ready(function() {
