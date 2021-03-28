@@ -42,12 +42,12 @@ def diagrams_info():
     return diagrams(regions, cult_value, state)
 
 
-# @app.route('/diagrams2', methods=['GET'])
-# def diagrams_info2():
-#     regions = request.args['regions']
-#     cult_value = request.args['cult_value']
-#     state = request.args['state']
-#     return diagrams(regions, cult_value, state)
+@app.route('/diagrams2', methods=['GET'])
+def diagrams_info2():
+    regions = request.args['regions']
+    cult_value = request.args['cult_value']
+    state = request.args['state']
+    return diagrams(regions, cult_value, state)
 
 
 @app.route('/form', methods=['GET'])

@@ -1001,6 +1001,10 @@ function drawImpSt(data){
     catch{}
 
     am4core.ready(function() {
+        try{
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        }catch{}
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
@@ -1155,7 +1159,10 @@ function drawSt(dataAll){
         }
     }
     am4core.ready(function() {
-        
+
+        document.getElementById('chartdiv').innerHTML='';
+        document.getElementById('chartdiv1').innerHTML='';
+        }catch{}
         // Themes begin
         am4core.useTheme(am4themes_material);
         am4core.useTheme(am4themes_animated);
@@ -1247,10 +1254,11 @@ function drawSt(dataAll){
 }
 /**1 регион, 1 значение, 1 состояние */
 function drawRegImpSt(data){
-    document.getElementById('charts').innerHTML=`<div class='chartdiv'></div>`;
     try{
-        document.getElementById('chartdivS').innerHTML='';}
-    catch{}
+    document.getElementById('chartdiv').innerHTML='';
+    document.getElementById('chartdiv1').innerHTML='';
+    }catch{}
+    console.log(data);
     html_str='';
     html_str=`<div class='row text-center> 
                 <div class='col-12 text-center mt-4'>
