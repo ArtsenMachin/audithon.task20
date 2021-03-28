@@ -38,7 +38,7 @@ function Reports(){
     var iframe = document.createElement('iframe');
     frameborder=0;
     iframe.width="100%";
-    iframe.height=window.innerHeight*0.6;
+    iframe.height=window.innerHeight*0.7;
     iframe.id="rep";
     iframe.setAttribute("src", link);
     document.getElementById("reports").appendChild(iframe);
